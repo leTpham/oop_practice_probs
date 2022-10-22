@@ -15,7 +15,8 @@ class Deck {
   suits.forEach(s => {
     ranks.forEach(r => {
         let card = {};
-        card[s] = r;
+        card.suit = s;
+        card.rank = r;
       deck.push(card);
       })
     })
@@ -37,13 +38,15 @@ class Deck {
     return array;
   }
 
-  static shuffleDeck () {
-    Deck._shuffleArray(Deck.cards);
+  shuffleDeck () {
+    Deck._shuffleArray(this.deck);
+    console.log("Deck shuffled!")
   }
 
 
-  static dealACard() {
-    let { suit, rank } = cards.pop();
+  dealACard() {
+    let { suit, rank } = this.deck.pop();
+    console.log(suit, rank)
     return new Card(suit, rank)
   }
 
