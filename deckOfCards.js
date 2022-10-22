@@ -7,25 +7,25 @@
 
 class Deck {
   constructor() {
-  // cards = [{suit: "Hearts", rank: "King"}, {suit: "Spades", rank: 1}, ...]
-  const suits = ["Diamonds", "Hearts", "Spades", "Clubs"];
-  const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen",
-                    "King", "Ace"]
-  const deck = [];
-  suits.forEach(s => {
-    ranks.forEach(r => {
+    // cards = [{suit: "Hearts", rank: "King"}, {suit: "Spades", rank: 1}, ...]
+    const suits = ["Diamonds", "Hearts", "Spades", "Clubs"];
+    const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen",
+      "King", "Ace"];
+    const deck = [];
+    suits.forEach(s => {
+      ranks.forEach(r => {
         let card = {};
         card.suit = s;
         card.rank = r;
-      deck.push(card);
-      })
-    })
+        deck.push(card);
+      });
+    });
     this.deck = deck;
-}
+  }
 
   //Fisher-Yates (aka Knuth) Shuffle
   static _shuffleArray(array) {
-    let currentIndex = array.length,  randomIndex;
+    let currentIndex = array.length, randomIndex;
 
     while (currentIndex != 0) {
 
@@ -38,17 +38,18 @@ class Deck {
     return array;
   }
 
-  shuffleDeck () {
+  shuffleDeck() {
     Deck._shuffleArray(this.deck);
-    console.log("Deck shuffled!")
+    console.log("Deck shuffled!");
   }
 
 
   dealACard() {
     let { suit, rank } = this.deck.pop();
-    console.log(suit, rank)
-    return new Card(suit, rank)
+    console.log(suit, rank);
+    return new Card(suit, rank);
   }
+
 
 }
 
@@ -57,21 +58,39 @@ class Card {
     this.suit = suit;
     this.rank = rank;
   }
+
 }
 
+class Hand {
+  constructor() {
+    this.cards = [];
+  }
 
+  takeACard(card) {
+    this.cards.push(card);
+  }
 
-/**
- * blackjack deals card to each player one by one
- * -> need to instantiate a card with a class Card everytime.
- * deck has 52 cards so everytime a card is dealt remove from the deck.
- *
- */
+  scoreHand() {
+    let score = 0;
+    //coudl be cool to use enum in TypeScript instead of switch cases here
+    this.cards.forEach(card => {
+      switch (card.rank) {
+        case "Jack":
+          score += 11;
+          break;
+        case "Queen":
+          score += 12;
+          break;
+        case "King":
+          score += 13;
+          break;
+        case "Ace":
+          score <= 10 ? score += 11 : score += 1;
+          break;
+        default: score += Number(card.rank);
+        }
+    });
+    return score;
+  }
+}
 
-/** non-OOP approach:
- * an array of suits = [diamond, heart, spade, clover]
- * an array of numbers 2 -> 10 and Jack, Queen, King, Ace
- * map through to get an array of 52 cards.
- *  shuffle the deck for blackjack.
- * pop the last card every time
- */
